@@ -1,13 +1,27 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 /* eslint-disable react-refresh/only-export-components */
 // import { useState, useEffect } from 'react';
-import { useParams, useLoaderData } from 'react-router-dom';
+import { useParams, useLoaderData, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaMapMarker } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 // import Spinner from '../components/Spinner';
 
-const JobPage = () => {
+const JobPage = ({ deleteJob }) => {
+  const naviagte = useNavigate();
   const { id } = useParams();
   const job = useLoaderData();
+
+  const onDeleteClick = (jobId) => {
+    const confirm = window.confirm('Are you sure want to delete this listing');
+
+    if (!confirm) return;
+
+    deleteJob(jobId);
+    toast.success('Job Deleted Successfully');
+    naviagte('/jobs');
+  };
 
   return (
     <>
@@ -78,12 +92,15 @@ const JobPage = () => {
               <div className='bg-white p-6 rounded-lg shadow-md mt-6'>
                 <h3 className='text-xl font-bold mb-6'>Manage Job</h3>
                 <Link
-                  to={`/jobs/edit/${job.id}`}
+                  to={`/edit-job/${job.id}`}
                   className='bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
                 >
                   Edit Job
                 </Link>
-                <button className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'>
+                <button
+                  onClick={() => onDeleteClick(job.id)}
+                  className='bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block'
+                >
                   Delete Job
                 </button>
               </div>
